@@ -1,2 +1,2 @@
 #!/bin/bash
-cp -un*.html ../
+find.-maxdepth 1-name "*.html"-type f -exec cp --update -t ..
