@@ -10,8 +10,12 @@ def number_of_subscribers(subreddit):
 
     if response.status_code == 200:
         data = response.json().get('data', {})
-        return data.get('subscribers', 0)
+        subscribers = data.get('subscribers', 0)
+        if subscribers == 0 and data.get('subreddit_type') == 'public':
+            subscribers = data.get('accounts_active', 0)
+        return subscribers
     else:
+        print(f"Error: {response.status_code}")
         return 0
 
 # Test the function
