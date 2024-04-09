@@ -1,23 +1,31 @@
 #!/usr/bin/python3
+"""Accessing a REST API for todo lists of employees"""
 
 import requests
+import sys
 
-def number_of_subscribers(subreddit):
-    url = f"https://www.reddit.com/r/{subreddit}/about.json"
-    headers = {'User-Agent': 'My User Agent 1.0'}  # Reddit API requires a custom User-Agent
-    response = requests.get(url, headers=headers)
 
-    if response.status_code == 200:
-        data = response.json()
-        return data['data']['subscribers']
-    else:
-        return 0
-
-# Test the function
 if __name__ == '__main__':
-    subreddit = "programming"
-    print(number_of_subscribers(subreddit))
+    employeeId = sys.argv[1]
+    baseUrl = "https://jsonplaceholder.typicode.com/users"
+    url = baseUrl + "/" + employeeId
 
-    subreddit = "this_is_a_fake_subreddit"
-    print(number_of_subscribers(subreddit))
+    response = requests.get(url)
+    employeeName = response.json().get('name')
 
+    todoUrl = url + "/todos"
+    response = requests.get(todoUrl)
+    tasks = response.json()
+    done = 0
+    done_tasks = []
+
+    for task in tasks:
+        if task.get('completed'):
+            done_tasks.append(task)
+            done += 1
+
+    print("Employee {} is done with tasks({}/{}):"
+          .format(employeeName, done, len(tasks)))
+
+    for task in done_tasks:
+        print("\t {}".format(task.get('title')))
