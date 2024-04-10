@@ -1,1 +1,1 @@
-Webstack monitoring
+Web stack debugging
